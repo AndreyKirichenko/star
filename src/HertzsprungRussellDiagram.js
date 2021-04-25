@@ -60,6 +60,20 @@ const HertzsprungRussellDiagram = ({ starState = null }) => {
   };
   
   const options = {
+    annotation: {
+      annotations: [{
+        type: 'line',
+        mode: 'horizontal',
+        scaleID: 'y-axis-0',
+        value: 5,
+        borderColor: 'rgb(75, 192, 192)',
+        borderWidth: 4,
+        label: {
+          enabled: false,
+          content: 'Test label'
+        }
+      }]
+    },
     animation: {
       duration: 0
     },
@@ -86,6 +100,11 @@ const HertzsprungRussellDiagram = ({ starState = null }) => {
         type: 'logarithmic',
       },
     },
+    plugins: {
+      tooltip: {
+        enabled: false,
+      }
+    }
   };
 
   return (
