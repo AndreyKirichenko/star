@@ -49,8 +49,8 @@ const App = () => {
           { !data.length &&
             <MainContent>
               <Div style={{
-                display: 'flex',
                 alignItems: 'center',
+                display: 'flex',
                 flexDirection: 'column',
                 opacity: 0.5,
               }}>

@@ -10,6 +10,7 @@ const STYLE = {
   height: 'calc(100vh - 120px)',
   justifyContent: 'center',
   marginTop: 60,
+  position: 'relative',
 };
 
 const MainContent = ({ children }) => <Div style={STYLE}>{children}</Div>;

@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { Bubble } from 'react-chartjs-2';
 
 const TYPES = [
@@ -21,7 +20,7 @@ const TYPES = [
   'Сверхновая',
 ];
 
-const HertzsprungRussellDiagram = ({ starState = null }) => {
+const HertzsprungRussellDiagram = ({ starState = {} }) => {
   const {
     lum,
     mass,
@@ -45,55 +44,44 @@ const HertzsprungRussellDiagram = ({ starState = null }) => {
     labels: ['1'],
     datasets: [
       {
-        label: ` - ${info.join(' | ')}`,
+        backgroundColor: rgb,
+        borderColor: rgb,
+        borderWidth: 4,
         data: [{
           x: temp,
           y: lum,
           r: 10,
         }],
         fill: false,
-        backgroundColor: rgb,
-        borderColor: rgb,
-        borderWidth: 4,
+        label: ` - ${info.join(' | ')}`,
       },
     ],
   };
   
   const options = {
-    annotation: {
-      annotations: [{
-        type: 'line',
-        mode: 'horizontal',
-        scaleID: 'y-axis-0',
-        value: 5,
-        borderColor: 'rgb(75, 192, 192)',
-        borderWidth: 4,
-        label: {
-          enabled: false,
-          content: 'Test label'
-        }
-      }]
-    },
     animation: {
       duration: 0
     },
     maintainAspectRatio: false,
-    // responsive: true,
+    responsive: true,
     scales: {
       x: {
-        autoSkip: true,
         beginAtZero: true,
-        max: 200000,
-        min: 0,
+        grid: {
+          color: 'rgb(255, 255, 255, 0.1)',
+          borderColor: 'rgb(255, 255, 255, 0.1)',
+        },
+        max: 600000,
+        min: 1,
         position: 'bottom',
         reverse: true,
-        // type: 'logarithmic',
-        ticks: {
-          autoSkip: false,
-        },
-
+        type: 'logarithmic',
       },
       y: {
+        grid: {
+          color: 'rgb(255, 255, 255, 0.1)',
+          borderColor: 'rgb(255, 255, 255, 0.1)',
+        },
         max: 1000000,
         min: 0.00001,
         position: 'left',
@@ -108,10 +96,25 @@ const HertzsprungRussellDiagram = ({ starState = null }) => {
   };
 
   return (
-    <Bubble
-      data={data}
-      options={options}
-    />
+      <>
+        <img
+          alt='Основная последовательность'
+          src='/main.svg'
+          style={{
+            bottom: 0,
+            height: '100%',
+            left: 0,
+            position: 'absolute',
+            right: 0,
+            top: 0,
+            width: '100%',
+          }}
+        />
+        <Bubble
+          data={data}
+          options={options}
+        />
+      </>
   );
 }
 
