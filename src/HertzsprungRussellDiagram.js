@@ -21,7 +21,7 @@ const TYPES = [
   'Сверхновая',
 ];
 
-const HertzsprungRussellDiagram = ({ starState }) => {
+const HertzsprungRussellDiagram = ({ starState = null }) => {
   const {
     lum,
     mass,

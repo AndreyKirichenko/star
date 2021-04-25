@@ -31,6 +31,7 @@ const App = () => {
         const { data } = response.data;
         setData(data)
         setIsLoading(false);
+        setDataIndex(0);
       });
   }
 
@@ -66,7 +67,11 @@ const App = () => {
               </MainContent>
 
               <FixedLayout filled vertical="bottom"> 
-                <TimeSlider max={data.length - 1} setIndex={setDataIndex}/>
+                <TimeSlider
+                  dataIndex={dataIndex}
+                  max={data.length - 1}
+                  setIndex={setDataIndex}
+                />
               </FixedLayout>
             </>
           }
