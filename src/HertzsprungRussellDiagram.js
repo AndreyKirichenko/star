@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Line } from 'react-chartjs-2';
+import { Bubble } from 'react-chartjs-2';
 
 const TYPES = [
   'Звезда главной последовательности',
@@ -22,8 +22,6 @@ const TYPES = [
 ];
 
 const HertzsprungRussellDiagram = ({ starState }) => {
-  console.log('starState', starState);
-
   const {
     lum,
     mass,
@@ -34,35 +32,64 @@ const HertzsprungRussellDiagram = ({ starState }) => {
     type,
   } = starState;
 
+  const info = [
+    TYPES[type],
+    `яркость: ${lum} от солнечной`,
+    `масса: ${mass} от солнечной`,
+    `радиус: ${radius} от солнечного`,
+    `температура: ${temp}K`,
+    `возраст: ${time} млн. лет`
+  ];
+
   const data = {
     labels: ['1'],
     datasets: [
       {
-        label: `${TYPES[type]} | яркость: ${lum} от солнечной | масса: ${mass} от солнечной | радиус: ${radius} от солнечного |температура: ${temp}K | возраст: ${time} млн. лет. `,
-        data: ['0.01', 19, 3, 5, 2, 3, 123],
+        label: ` - ${info.join(' | ')}`,
+        data: [{
+          x: temp,
+          y: lum,
+          r: 10,
+        }],
         fill: false,
         backgroundColor: rgb,
         borderColor: rgb,
+        borderWidth: 4,
       },
     ],
   };
   
   const options = {
-    responsive: true,
+    animation: {
+      duration: 0
+    },
     maintainAspectRatio: false,
+    // responsive: true,
     scales: {
-      yAxes: [
-        {
-          ticks: {
-            // beginAtZero: true,
-          },
+      x: {
+        autoSkip: true,
+        beginAtZero: true,
+        max: 200000,
+        min: 0,
+        position: 'bottom',
+        reverse: true,
+        // type: 'logarithmic',
+        ticks: {
+          autoSkip: false,
         },
-      ],
+
+      },
+      y: {
+        max: 1000000,
+        min: 0.00001,
+        position: 'left',
+        type: 'logarithmic',
+      },
     },
   };
 
   return (
-    <Line
+    <Bubble
       data={data}
       options={options}
     />
