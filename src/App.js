@@ -1,81 +1,75 @@
-import React from 'react';
+import React, { useState } from 'react';
+
+import axios from 'axios';
+
 import {
-  AdaptivityProvider,
   AppRoot,
-  ConfigProvider,
-  Group,
-  Panel,
-  PanelHeader,
-  Slider,
-  SplitCol,
-  SplitLayout,
-  useAdaptivity,
-  View,
-  ViewWidth,
-
-  FormLayout,
-  FormLayoutGroup,
-  FormItem,
-  Input,
-  ModalRoot,
-  ModalPage,
-  ModalPageHeader,
-  Separator,
-
-  CellButton,
-  Cell,
-  Placeholder,
-  Avatar,
-  Button,
-  usePlatform,
-  Alert,
-  FixedLayout,
-  PanelHeaderContent,
-  PanelHeaderButton,
-  PanelHeaderBack,
-  PanelHeaderContext,
-  List,
   Div,
-  Select,
-  CustomSelectOption,
+  FixedLayout,
+  Panel,
+  ScreenSpinner,
+  View,
 } from '@vkontakte/vkui';
 
-import {
-  Icon56UsersOutline,
-  Icon56MentionOutline,
-  Icon56MessageReadOutline,
-  Icon28MessageOutline,
-  Icon28UsersOutline,
-  Icon24Done,
-  Icon28SettingsOutline,
-} from '@vkontakte/icons';
-
-// import { Line } from 'react-chartjs-2';
-
+import HertzsprungRussellDiagram  from './HertzsprungRussellDiagram';
+import MainContent from './MainContent';
+import MassSelection from './MassSelection';
+import TimeSlider from './TimeSlider';
+import { Icon56FavoriteOutline } from '@vkontakte/icons';
 import '@vkontakte/vkui/dist/vkui.css';
 
 const App = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState([]);
+  const [dataIndex, setDataIndex] = useState(0);
+
+  const fetchMass = async (event) => {
+    setIsLoading(true);
+
+    await axios(`/data/star_${event.target.value}_solar_mass.json`)
+      .then(response => {
+        const { data } = response.data;
+        setData(data)
+        setIsLoading(false);
+      });
+  }
+
   return (
     <AppRoot>
-      <View activePanel="main">
+      <View
+        activePanel="main"
+        popout={isLoading && <ScreenSpinner />}
+      >
         <Panel id="main">
           <FixedLayout filled vertical="top">
-            <Div>
-              <Select
-                placeholder="Масса звезды" 
-                // options={getRandomUsers(10).map(user => ({ label: user.name, value: user.id, avatar: user.photo_100 }))}
-                renderOption={({ option, ...restProps }) => (
-                  <CustomSelectOption {...restProps} before={<Avatar size={24} src={option.avatar} />} />
-                )}
-              />
-            </Div>
+            <MassSelection fetchMass={fetchMass}/>
           </FixedLayout>
-          
-          <FixedLayout filled vertical="bottom"> 
-            <Div>
-              <Slider />
-            </Div>
-          </FixedLayout>
+
+          { !data.length &&
+            <MainContent>
+              <Div style={{
+                display: 'flex',
+                alignItems: 'center',
+                flexDirection: 'column',
+                opacity: 0.5,
+              }}>
+                <Icon56FavoriteOutline />
+                Выберите массу звезды
+              </Div>
+            </MainContent>
+          }
+
+          { !!data.length &&
+            <>
+              <MainContent>
+                <HertzsprungRussellDiagram starState={data[dataIndex]} />
+              </MainContent>
+
+              <FixedLayout filled vertical="bottom"> 
+                <TimeSlider max={data.length - 1} setIndex={setDataIndex}/>
+              </FixedLayout>
+            </>
+          }
         </Panel>
       </View>
     </AppRoot>
